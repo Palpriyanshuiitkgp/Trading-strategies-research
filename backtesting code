@@ -1,0 +1,25 @@
+Backtesting Code Snippet
+The core logic of the backtesting process can be simplified to the following steps:
+
+import pandas as pd
+import numpy as np
+
+# Assume 'data' is a DataFrame of Nifty 100 stock prices with 'Date' as index
+# and 'MarketCap' as a separate DataFrame.
+def backtest_strategy(data, market_cap):
+    portfolio_value = 1000000  # Starting capital of 1,000,000
+    portfolio_history = []
+
+    for date in pd.to_datetime(data.index).to_period('M').unique():
+        # 1. Select the smallest 20 stocks by market cap for the month
+        monthly_market_caps = market_cap.loc[date.start_time]
+        small_cap_stocks = monthly_market_caps.nsmallest(20).index
+        
+        # 2. Rebalance the portfolio to hold these stocks
+        # ... (logic for calculating returns and updating portfolio_value) ...
+        
+        # Log the portfolio value for this month
+        portfolio_history.append(portfolio_value)
+    return pd.Series(portfolio_history, index=pd.to_datetime([d.start_time for d in pd.to_datetime(data.index).to_period('M').unique()]))
+
+The full backtesting script performs this process iteratively, tracking the portfolio's value and returns over the entire 5-year period.
